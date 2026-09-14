@@ -129,12 +129,7 @@
     background:var(--ink); color:var(--card); padding:0.35rem 0.7rem; text-decoration:none;
   }
 
-  /* ---------- Generator ---------- */
-  .gen-panel-block{ background:var(--bg-raised); border:1px solid var(--line); padding:1.1rem 1.2rem; margin-bottom:1.1rem; }
-  .gen-panel-block h2{ font-size:1.1rem; text-transform:uppercase; margin-bottom:0.8rem; color:var(--doubleteam); }
-  #wrestler-fields{ display:flex; flex-direction:column; gap:0.9rem; }
-  .wrestler-field{ display:flex; gap:0.9rem; flex-wrap:wrap; }
-  .wrestler-field label{ display:flex; flex-direction:column; gap:0.3rem; font-size:0.85rem; color:var(--paper-dim); flex:1; min-width:11rem; }
+  /* ---------- Match Editor ---------- */
   .action-row{ display:flex; gap:0.8rem; flex-wrap:wrap; margin-top:0.4rem; }
   .btn-primary, .btn-secondary{
     font-family:'Anton', sans-serif; text-transform:uppercase; letter-spacing:0.03em;
@@ -143,23 +138,52 @@
   .btn-primary{ background:var(--schlaege); color:#fff; }
   .btn-secondary{ background:transparent; color:var(--paper); border:2px solid var(--line); }
 
-  #card-output{ margin-top:1.4rem; }
-  .card-stip{
-    background:var(--schlaege); color:#fff; font-family:'Anton', sans-serif;
-    text-transform:uppercase; text-align:center; padding:0.7rem 1rem; font-size:1.1rem; letter-spacing:0.02em;
+  .empty-hint{ color:var(--paper-dim); font-size:0.9rem; font-style:italic; }
+  .btn-tiny{
+    background:var(--doubleteam); color:var(--ink); border:none; font-weight:700;
+    font-family:'Barlow', sans-serif; font-size:0.78rem; padding:0.35rem 0.7rem; cursor:pointer; border-radius:2px;
   }
-  .card-columns{ display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1rem; margin-top:1rem; }
-  .wrestler-column{ background:var(--card); color:var(--ink); padding:1rem 1.1rem; }
-  .wrestler-column-head{ display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.6rem; }
-  .wrestler-column-head h3{ font-size:1.1rem; text-transform:uppercase; margin-right:auto; }
-  .archetype-pill{ font-size:0.7rem; font-weight:700; text-transform:uppercase; background:var(--doubleteam); color:var(--ink); padding:0.15rem 0.5rem; border-radius:2px; }
-  .reroll-btn{ background:transparent; border:1px solid rgba(0,0,0,0.3); color:var(--ink); font-size:0.75rem; padding:0.25rem 0.55rem; cursor:pointer; }
-  .beat-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0.5rem; }
-  .beat-list li{ display:flex; align-items:baseline; gap:0.45rem; flex-wrap:wrap; font-size:0.88rem; border-bottom:1px dashed rgba(0,0,0,0.15); padding-bottom:0.4rem; }
-  .beat-label{ font-size:0.72rem; text-transform:uppercase; color:rgba(0,0,0,0.55); flex:0 0 6.5rem; }
-  .beat-dot{ width:0.6rem; height:0.6rem; border-radius:50%; background:var(--dot-color); display:inline-block; }
-  .beat-name{ font-weight:600; }
-  .beat-empty{ font-style:italic; color:rgba(0,0,0,0.5); }
+  .btn-tiny.btn-ghost{ background:transparent; color:var(--paper); border:1px solid var(--line); }
+
+  #fights-container{ margin-top:1.2rem; }
+  .fight-card{ background:var(--bg-raised); border:1px solid var(--line); padding:1.1rem 1.2rem; margin-bottom:1.2rem; }
+  .fight-card-head{ display:flex; gap:0.6rem; align-items:center; margin-bottom:0.8rem; }
+  .fight-name-input{
+    flex:1; background:transparent; border:none; border-bottom:2px solid var(--line);
+    font-family:'Anton', sans-serif; text-transform:uppercase; font-size:1.2rem; color:var(--paper); padding:0.2rem 0;
+  }
+  .fighters-row{ display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center; margin-bottom:0.7rem; }
+  .fighter-chip{
+    display:inline-flex; align-items:center; gap:0.4rem; background:var(--card); color:var(--ink);
+    font-weight:600; font-size:0.85rem; padding:0.3rem 0.4rem 0.3rem 0.7rem; border-radius:2px;
+  }
+  .chip-remove, .item-remove{
+    background:none; border:none; color:inherit; opacity:0.6; cursor:pointer; font-size:1rem; line-height:1; padding:0 0.2rem;
+  }
+  .chip-remove:hover, .item-remove:hover{ opacity:1; }
+
+  .inline-form{
+    display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center;
+    background:rgba(0,0,0,0.2); padding:0.7rem; margin-bottom:0.7rem;
+  }
+  .inline-form input[type="text"], .inline-form select, .inline-form textarea{
+    background:var(--bg); color:var(--paper); border:1px solid var(--line); padding:0.4rem 0.5rem; font-size:0.85rem;
+  }
+  .inline-form textarea{ flex:1 1 100%; min-width:14rem; resize:vertical; }
+  .move-select{ min-width:12rem; }
+
+  .fight-items{ list-style:none; margin:0 0 0.8rem; padding:0; display:flex; flex-direction:column; gap:0.4rem; }
+  .fight-item{
+    display:flex; align-items:center; gap:0.5rem; background:var(--card); color:var(--ink);
+    padding:0.5rem 0.7rem; font-size:0.88rem;
+  }
+  .fight-item-note{ background:transparent; color:var(--paper-dim); font-style:italic; border-left:2px solid var(--line); padding-left:0.6rem; }
+  .item-dot{ width:0.55rem; height:0.55rem; border-radius:50%; background:var(--dot-color); flex-shrink:0; }
+  .item-fighter{ font-weight:700; }
+  .item-arrow{ opacity:0.5; }
+  .item-text{ flex:1; }
+  .item-icon{ opacity:0.7; }
+  .fight-actions-row{ display:flex; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.3rem; }
 
   footer{
     max-width:60rem; margin:2rem auto 0; padding:1.5rem 1.5rem 3rem;
@@ -179,7 +203,7 @@
 
 <nav class="tabs" role="tablist">
   <button class="tab-btn active" data-tab="archive" role="tab" aria-selected="true">Techniken-Archiv</button>
-  <button class="tab-btn" data-tab="generator" role="tab" aria-selected="false">Match-Generator</button>
+  <button class="tab-btn" data-tab="editor" role="tab" aria-selected="false">Match Editor</button>
 </nav>
 
 <main>
@@ -215,43 +239,11 @@
     <div id="archive-grid"></div>
   </section>
 
-  <section id="panel-generator" class="hidden">
-    <div class="gen-panel-block">
-      <h2>Karten-Einstellungen</h2>
-      <div class="field-group" style="margin-bottom:0.9rem;">
-        <span class="field-title">Kategorien für die Auswahl</span>
-        <div class="chip-row" id="gen-cat-chips"></div>
-      </div>
-      <div class="field-group" style="margin-bottom:0.9rem;">
-        <span class="field-title">Risikostufe einbeziehen</span>
-        <div class="chip-row" id="gen-risk-chips">
-          <button type="button" class="chip active" data-risk="low" aria-pressed="true">Gering</button>
-          <button type="button" class="chip active" data-risk="moderate" aria-pressed="true">Mittel</button>
-          <button type="button" class="chip" data-risk="high" aria-pressed="false">Hoch</button>
-        </div>
-      </div>
-      <div class="wrestler-field" style="margin-bottom:0.9rem;">
-        <label>Teilnehmerzahl
-          <select id="wrestler-count">
-            <option value="2" selected>2 (Einzelmatch)</option>
-            <option value="3">3</option>
-            <option value="4">4 (Tag-Team-Paarung)</option>
-          </select>
-        </label>
-        <label>Stipulation
-          <select id="stipulation-select"></select>
-        </label>
-      </div>
-      <div id="wrestler-fields"></div>
-    </div>
-
+  <section id="panel-editor" class="hidden">
     <div class="action-row">
-      <button class="btn-primary" id="generate-btn" type="button">Match-Karte erstellen</button>
-      <button class="btn-secondary" id="reroll-all-btn" type="button">Alles neu würfeln</button>
-      <button class="btn-secondary" id="copy-btn" type="button">Karte als Text kopieren</button>
+      <button class="btn-primary" id="create-fight-btn" type="button">Kampf erstellen</button>
     </div>
-
-    <div id="card-output"></div>
+    <div id="fights-container"></div>
   </section>
 
 </main>
@@ -275,39 +267,6 @@
     kicks: { label:'Kicks', color:'#E8A63A' },
     doubleteam: { label:'Double-Team Moves', color:'#B23E7A' },
   };
-
-  var ARCHETYPES = {
-    flieger:    { label:'Flieger',     weights:{ haltegriffe:4, wuerfe:4, backbreaker:2, ddt:4, piledriver:1, powerbomb:2, suplex:4, andere:8, liegend:8, turnbuckle:30, schlaege:6, kicks:12, doubleteam:5 } },
-    kraftpaket: { label:'Kraftpaket',  weights:{ haltegriffe:4, wuerfe:16, backbreaker:10, ddt:4, piledriver:8, powerbomb:14, suplex:12, andere:8, liegend:4, turnbuckle:4, schlaege:8, kicks:3, doubleteam:5 } },
-    techniker:  { label:'Techniker',   weights:{ haltegriffe:28, wuerfe:6, backbreaker:4, ddt:12, piledriver:4, powerbomb:4, suplex:14, andere:6, liegend:2, turnbuckle:4, schlaege:4, kicks:4, doubleteam:8 } },
-    raufbold:   { label:'Raufbold',    weights:{ haltegriffe:4, wuerfe:8, backbreaker:6, ddt:6, piledriver:3, powerbomb:4, suplex:4, andere:16, liegend:6, turnbuckle:4, schlaege:24, kicks:12, doubleteam:3 } },
-    allrounder: { label:'Allrounder',  weights:{ haltegriffe:10, wuerfe:10, backbreaker:10, ddt:10, piledriver:10, powerbomb:10, suplex:10, andere:10, liegend:10, turnbuckle:10, schlaege:10, kicks:10, doubleteam:10 } }
-  };
-
-  var STIPULATIONS = [
-    'Standard-Einzelmatch',
-    'Match ohne Disqualifikation',
-    'Sieg überall im Gebäude',
-    'Leiter-Match',
-    'Tisch-Match',
-    'Stahlkäfig-Match',
-    'Last-Wrestler-Standing-Match',
-    'Backyard-Rumble',
-    'Match mit Augenbinde',
-    'Lumberjack-Match',
-    'Hardcore-Match (alles erlaubt)',
-    'Iron-Wrestler-Zeitlimit-Match',
-    'Kostüm- &amp; Gimmick-Match',
-    'Reise-nach-Jerusalem-Brawl'
-  ];
-
-  var BEATS = [
-    { key:'opening', label:'Auftakt',     tierPref:['basic'] },
-    { key:'control',  label:'Kontrolle',   tierPref:['basic','signature'] },
-    { key:'turning',  label:'Wendepunkt',  tierPref:['signature','basic'] },
-    { key:'bigspot',  label:'Highlight',   tierPref:['signature','finisher'] },
-    { key:'finish',   label:'Finish',      tierPref:['finisher','signature'] }
-  ];
 
   var TIER_LABELS = { basic:'Basis', signature:'Signature', finisher:'Finisher' };
   var RISK_LABELS = { low:'Geringes Risiko', moderate:'Mittleres Risiko', high:'Hohes Risiko' };
@@ -641,207 +600,275 @@
   });
   renderArchive();
 
-  /* ================= GENERATOR ================= */
-  var genState = {
-    categories: new Set(Object.keys(CATEGORIES)),
-    risk: new Set(['low','moderate']),
-    wrestlerCount: 2,
-    wrestlers: [
-      { name:'Wrestler A', archetype:'zufall' },
-      { name:'Wrestler B', archetype:'zufall' }
-    ],
-    stipulation: 'zufall'
-  };
-
-  buildCategoryChips(document.getElementById('gen-cat-chips'), genState.categories, function(){});
-  Array.prototype.forEach.call(document.querySelectorAll('#gen-risk-chips [data-risk]'), function(btn){
-    btn.addEventListener('click', function(){
-      var risk = btn.dataset.risk;
-      if(genState.risk.has(risk)){ genState.risk.delete(risk); } else { genState.risk.add(risk); }
-      btn.classList.toggle('active');
-      btn.setAttribute('aria-pressed', genState.risk.has(risk) ? 'true' : 'false');
-    });
-  });
-
-  var wrestlerCountSelect = document.getElementById('wrestler-count');
-  var wrestlerFields = document.getElementById('wrestler-fields');
-  var stipulationSelect = document.getElementById('stipulation-select');
-
-  stipulationSelect.innerHTML = '<option value="zufall">Überrasch mich</option>' +
-    STIPULATIONS.map(function(s){ return '<option value="' + escapeHtml(s) + '">' + escapeHtml(s) + '</option>'; }).join('');
-  stipulationSelect.addEventListener('change', function(e){ genState.stipulation = e.target.value; });
-
-  function renderWrestlerFields(){
-    while(genState.wrestlers.length < genState.wrestlerCount){
-      var idx = genState.wrestlers.length;
-      genState.wrestlers.push({ name:'Wrestler ' + String.fromCharCode(65 + idx), archetype:'zufall' });
-    }
-    genState.wrestlers = genState.wrestlers.slice(0, genState.wrestlerCount);
-
-    wrestlerFields.innerHTML = genState.wrestlers.map(function(w, i){
-      var options = '<option value="zufall"' + (w.archetype === 'zufall' ? ' selected' : '') + '>Zufällig</option>';
-      Object.keys(ARCHETYPES).forEach(function(k){
-        options += '<option value="' + k + '"' + (w.archetype === k ? ' selected' : '') + '>' + ARCHETYPES[k].label + '</option>';
-      });
-      return '' +
-        '<div class="wrestler-field">' +
-          '<label>Name Wrestler ' + (i + 1) +
-            '<input type="text" data-idx="' + i + '" class="wrestler-name" value="' + escapeHtml(w.name) + '" maxlength="40">' +
-          '</label>' +
-          '<label>Stil' +
-            '<select data-idx="' + i + '" class="wrestler-archetype">' + options + '</select>' +
-          '</label>' +
-        '</div>';
-    }).join('');
-
-    Array.prototype.forEach.call(wrestlerFields.querySelectorAll('.wrestler-name'), function(inp){
-      inp.addEventListener('input', function(){
-        var i = +inp.dataset.idx;
-        genState.wrestlers[i].name = inp.value || ('Wrestler ' + String.fromCharCode(65 + i));
-      });
-    });
-    Array.prototype.forEach.call(wrestlerFields.querySelectorAll('.wrestler-archetype'), function(sel){
-      sel.addEventListener('change', function(){
-        genState.wrestlers[+sel.dataset.idx].archetype = sel.value;
-      });
-    });
+  /* ================= MATCH EDITOR ================= */
+  var FIGHTS_KEY = 'wwo-fights-v1';
+  function loadFights(){
+    try{ return JSON.parse(localStorage.getItem(FIGHTS_KEY) || '[]'); }
+    catch(e){ return []; }
   }
-  wrestlerCountSelect.addEventListener('change', function(e){
-    genState.wrestlerCount = +e.target.value;
-    renderWrestlerFields();
-  });
-  renderWrestlerFields();
-
-  function pickCategory(weights, allowedCats){
-    var entries = Object.keys(weights).filter(function(cat){ return allowedCats.has(cat); }).map(function(cat){ return [cat, weights[cat]]; });
-    if(!entries.length) return null;
-    var total = entries.reduce(function(s, e){ return s + e[1]; }, 0);
-    var r = Math.random() * total;
-    for(var i = 0; i < entries.length; i++){
-      if(r < entries[i][1]) return entries[i][0];
-      r -= entries[i][1];
-    }
-    return entries[entries.length - 1][0];
+  function saveFights(){
+    try{ localStorage.setItem(FIGHTS_KEY, JSON.stringify(fights)); }
+    catch(e){ /* Speicher nicht verfügbar, ignorieren */ }
   }
+  var fights = loadFights();
+  var openForms = {};
 
-  function movePool(){
-    var pool = MOVES.filter(function(m){ return genState.categories.has(m.category) && genState.risk.has(m.risk); });
-    if(!pool.length) pool = MOVES.filter(function(m){ return genState.categories.has(m.category); });
-    if(!pool.length) pool = MOVES.slice();
-    return pool;
-  }
+  function makeId(){ return 'id_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
 
-  function pickMove(pool, category, tierPrefs, usedIds){
-    var i, c;
-    for(i = 0; i < tierPrefs.length; i++){
-      c = pool.filter(function(m){ return m.category === category && m.tier === tierPrefs[i] && !usedIds.has(m.id); });
-      if(c.length) return c[Math.floor(Math.random() * c.length)];
-    }
-    c = pool.filter(function(m){ return m.category === category && !usedIds.has(m.id); });
-    if(c.length) return c[Math.floor(Math.random() * c.length)];
-    for(i = 0; i < tierPrefs.length; i++){
-      c = pool.filter(function(m){ return m.tier === tierPrefs[i] && !usedIds.has(m.id); });
-      if(c.length) return c[Math.floor(Math.random() * c.length)];
-    }
-    c = pool.filter(function(m){ return !usedIds.has(m.id); });
-    if(c.length) return c[Math.floor(Math.random() * c.length)];
+  function findFight(id){
+    for(var i = 0; i < fights.length; i++){ if(fights[i].id === id) return fights[i]; }
     return null;
   }
 
-  function buildWrestlerCard(w){
-    var archKeys = Object.keys(ARCHETYPES);
-    var archetypeKey = w.archetype === 'zufall' ? archKeys[Math.floor(Math.random() * archKeys.length)] : w.archetype;
-    var archetype = ARCHETYPES[archetypeKey];
-    var pool = movePool();
-    var allowedCats = genState.categories.size ? genState.categories : new Set(Object.keys(CATEGORIES));
-    var allowedList = Array.from(allowedCats);
-    var usedIds = new Set();
-    var beats = BEATS.map(function(beat){
-      var cat = pickCategory(archetype.weights, allowedCats) || allowedList[Math.floor(Math.random() * allowedList.length)];
-      var move = pickMove(pool, cat, beat.tierPref, usedIds);
-      if(move) usedIds.add(move.id);
-      return { beat: beat, move: move };
-    });
-    return { name: w.name, archetypeLabel: archetype.label, beats: beats };
+  function createFight(){
+    fights.push({ id: makeId(), name: 'Kampf ' + (fights.length + 1), fighters: [], items: [] });
+    saveFights();
+    renderFights();
   }
 
-  var lastCard = null;
-
-  function renderCard(){
-    var stip = genState.stipulation === 'zufall'
-      ? STIPULATIONS[Math.floor(Math.random() * STIPULATIONS.length)]
-      : genState.stipulation;
-    var cards = genState.wrestlers.map(buildWrestlerCard);
-    lastCard = { stip: stip, cards: cards };
-    paintCard();
+  function buildFavoriteOptions(){
+    var favMoves = MOVES.filter(function(m){ return favorites.has(m.id); });
+    var byCat = {};
+    favMoves.forEach(function(m){ (byCat[m.category] = byCat[m.category] || []).push(m); });
+    return Object.keys(CATEGORIES).filter(function(c){ return byCat[c] && byCat[c].length; }).map(function(c){
+      return '<optgroup label="' + CATEGORIES[c].label + '">' +
+        byCat[c].map(function(m){ return '<option value="' + m.id + '">' + escapeHtml(m.name) + '</option>'; }).join('') +
+        '</optgroup>';
+    }).join('');
   }
 
-  function paintCard(){
-    if(!lastCard) return;
-    var out = document.getElementById('card-output');
-    out.innerHTML = '' +
-      '<div class="card-stip">' + escapeHtml(lastCard.stip) + '</div>' +
-      '<div class="card-columns">' +
-        lastCard.cards.map(function(c, ci){
-          var beatsHtml = c.beats.map(function(b){
-            if(!b.move){
-              return '<li><span class="beat-label">' + b.beat.label + '</span><span class="beat-empty">Keine passende Technik bei diesen Filtern</span></li>';
-            }
-            var cat = CATEGORIES[b.move.category];
-            return '' +
-              '<li>' +
-                '<span class="beat-label">' + b.beat.label + '</span>' +
-                '<span class="beat-dot" style="--dot-color:' + cat.color + '"></span>' +
-                '<span class="beat-name">' + escapeHtml(b.move.name) + '</span>' +
-              '</li>';
-          }).join('');
-          return '' +
-            '<div class="wrestler-column">' +
-              '<div class="wrestler-column-head">' +
-                '<h3>' + escapeHtml(c.name) + '</h3>' +
-                '<span class="archetype-pill">' + escapeHtml(c.archetypeLabel) + '</span>' +
-                '<button class="reroll-btn" data-idx="' + ci + '" type="button">Neu würfeln</button>' +
-              '</div>' +
-              '<ol class="beat-list">' + beatsHtml + '</ol>' +
-            '</div>';
-        }).join('') +
-      '</div>';
-    Array.prototype.forEach.call(out.querySelectorAll('.reroll-btn'), function(btn){
-      btn.addEventListener('click', function(){
-        var idx = +btn.dataset.idx;
-        lastCard.cards[idx] = buildWrestlerCard(genState.wrestlers[idx]);
-        paintCard();
-      });
-    });
-  }
+  var fightsContainer = document.getElementById('fights-container');
 
-  document.getElementById('generate-btn').addEventListener('click', renderCard);
-  document.getElementById('reroll-all-btn').addEventListener('click', function(){ if(lastCard) renderCard(); });
-
-  document.getElementById('copy-btn').addEventListener('click', function(){
-    if(!lastCard){ return; }
-    var text = 'WEIRD WRESTLING ORGANIZER \u2014 MATCH-KARTE\n';
-    text += 'Stipulation: ' + lastCard.stip + '\n\n';
-    lastCard.cards.forEach(function(c){
-      text += c.name + ' (' + c.archetypeLabel + ')\n';
-      c.beats.forEach(function(b){
-        text += '  ' + b.beat.label + ': ' + (b.move ? b.move.name : '\u2014') + '\n';
-      });
-      text += '\n';
-    });
-    var btn = document.getElementById('copy-btn');
-    var original = btn.textContent;
-    function flash(){ btn.textContent = 'Kopiert!'; setTimeout(function(){ btn.textContent = original; }, 1500); }
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(text).then(flash).catch(function(){ window.prompt('Diesen Text kopieren:', text); });
-    } else {
-      window.prompt('Diesen Text kopieren:', text);
+  function renderFights(){
+    if(!fights.length){
+      fightsContainer.innerHTML = '<p class="empty-hint">Noch kein Kampf erstellt. Klicke oben auf „Kampf erstellen", um zu starten.</p>';
+      return;
     }
-  });
+    fightsContainer.innerHTML = fights.map(renderFightCard).join('');
+    wireFightEvents();
+  }
+
+  function renderFightCard(fight){
+    var fightersHtml = fight.fighters.map(function(f){
+      return '<span class="fighter-chip">' + escapeHtml(f.name) +
+        '<button type="button" class="chip-remove" data-remove-fighter="' + fight.id + '|' + f.id + '" aria-label="' + escapeHtml(f.name) + ' entfernen">\u00d7</button></span>';
+    }).join('');
+
+    var itemsHtml = fight.items.map(function(item, idx){
+      if(item.type === 'note'){
+        return '<li class="fight-item fight-item-note"><span class="item-icon">\u270E</span><span class="item-text">' + escapeHtml(item.text) + '</span>' +
+          '<button type="button" class="item-remove" data-remove-item="' + fight.id + '|' + idx + '" aria-label="Eintrag entfernen">\u00d7</button></li>';
+      }
+      var move = findMoveById(item.moveId);
+      var moveName = move ? move.name : '(gel\u00f6schte Technik)';
+      var cat = move ? CATEGORIES[move.category] : null;
+      return '<li class="fight-item fight-item-move">' +
+        (cat ? '<span class="item-dot" style="--dot-color:' + cat.color + '"></span>' : '') +
+        '<span class="item-fighter">' + escapeHtml(item.fighterName || '') + '</span>' +
+        '<span class="item-arrow">\u2192</span>' +
+        '<span class="item-text">' + escapeHtml(moveName) + '</span>' +
+        '<button type="button" class="item-remove" data-remove-item="' + fight.id + '|' + idx + '" aria-label="Eintrag entfernen">\u00d7</button>' +
+        '</li>';
+    }).join('');
+
+    var formState = openForms[fight.id];
+
+    var fighterFormHtml = formState === 'fighter' ? (
+      '<div class="inline-form" data-fighter-form="' + fight.id + '">' +
+        '<input type="text" class="fighter-name-input" placeholder="Name des K\u00e4mpfers\u2026" maxlength="40">' +
+        '<button type="button" class="btn-tiny" data-confirm-fighter="' + fight.id + '">Hinzuf\u00fcgen</button>' +
+        '<button type="button" class="btn-tiny btn-ghost" data-cancel-form="' + fight.id + '">Abbrechen</button>' +
+      '</div>'
+    ) : '';
+
+    var moveFormHtml = formState === 'move' ? (
+      !favorites.size
+        ? '<div class="inline-form"><span class="empty-hint">Noch keine Favoriten markiert. Markiere Techniken im Techniken-Archiv mit \u2605, um sie hier ausw\u00e4hlen zu k\u00f6nnen.</span> <button type="button" class="btn-tiny btn-ghost" data-cancel-form="' + fight.id + '">Schlie\u00dfen</button></div>'
+        : '<div class="inline-form" data-move-form="' + fight.id + '">' +
+            (fight.fighters.length
+              ? '<select class="move-fighter-select">' + fight.fighters.map(function(f){ return '<option value="' + escapeHtml(f.name) + '">' + escapeHtml(f.name) + '</option>'; }).join('') + '</select>'
+              : '<input type="text" class="move-fighter-select-text" placeholder="Wer f\u00fchrt sie aus? (optional)">') +
+            '<select class="move-select">' + buildFavoriteOptions() + '</select>' +
+            '<button type="button" class="btn-tiny" data-confirm-move="' + fight.id + '">Hinzuf\u00fcgen</button>' +
+            '<button type="button" class="btn-tiny btn-ghost" data-cancel-form="' + fight.id + '">Abbrechen</button>' +
+          '</div>'
+    ) : '';
+
+    var noteFormHtml = formState === 'note' ? (
+      '<div class="inline-form" data-note-form="' + fight.id + '">' +
+        '<textarea class="note-text-input" placeholder="Notiz, Storyline oder Regieanweisung\u2026" rows="2"></textarea>' +
+        '<button type="button" class="btn-tiny" data-confirm-note="' + fight.id + '">Hinzuf\u00fcgen</button>' +
+        '<button type="button" class="btn-tiny btn-ghost" data-cancel-form="' + fight.id + '">Abbrechen</button>' +
+      '</div>'
+    ) : '';
+
+    return '' +
+      '<div class="fight-card" data-fight-card="' + fight.id + '">' +
+        '<div class="fight-card-head">' +
+          '<input type="text" class="fight-name-input" data-fight-name="' + fight.id + '" value="' + escapeHtml(fight.name) + '" maxlength="60">' +
+          '<button type="button" class="btn-tiny btn-ghost" data-remove-fight="' + fight.id + '">Kampf l\u00f6schen</button>' +
+        '</div>' +
+        '<div class="fighters-row">' +
+          fightersHtml +
+          '<button type="button" class="btn-tiny" data-add-fighter="' + fight.id + '">+ K\u00e4mpfer hinzuf\u00fcgen</button>' +
+        '</div>' +
+        fighterFormHtml +
+        (fight.items.length ? '<ol class="fight-items">' + itemsHtml + '</ol>' : '') +
+        '<div class="fight-actions-row">' +
+          '<button type="button" class="btn-tiny" data-add-move="' + fight.id + '">+ Move hinzuf\u00fcgen</button>' +
+          '<button type="button" class="btn-tiny" data-add-note="' + fight.id + '">+ Notiz hinzuf\u00fcgen</button>' +
+        '</div>' +
+        moveFormHtml +
+        noteFormHtml +
+        '<div class="action-row" style="margin-top:0.8rem;">' +
+          '<button type="button" class="btn-secondary" data-copy-fight="' + fight.id + '">Kampf als Text kopieren</button>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function wireFightEvents(){
+    Array.prototype.forEach.call(fightsContainer.querySelectorAll('[data-fight-name]'), function(inp){
+      inp.addEventListener('input', function(){
+        var fight = findFight(inp.dataset.fightName);
+        if(fight){ fight.name = inp.value || fight.name; saveFights(); }
+      });
+    });
+    Array.prototype.forEach.call(fightsContainer.querySelectorAll('[data-remove-fight]'), function(btn){
+      btn.addEventListener('click', function(){
+        fights = fights.filter(function(f){ return f.id !== btn.dataset.removeFight; });
+        saveFights();
+        renderFights();
+      });
+    });
+    Array.prototype.forEach.call(fightsContainer.querySelectorAll('[data-add-fighter]'), function(btn){
+      btn.addEventListener('click', function(){
+        openForms[btn.dataset.addFighter] = 'fighter';
+        renderFights();
+        var inp = fightsContainer.querySelector('[data-fighter-form="' + btn.dataset.addFighter + '"] .fighter-name-input');
+        if(inp) inp.focus();
+      });
+    });
+    Array.prototype.forEach.call(fightsContainer.querySelectorAll('[data-confirm-fighter]'), function(btn){
+      btn.addEventListener('click', function(){
+        var fight = findFight(btn.dataset.confirmFighter);
+        var form = btn.closest('.inline-form');
+        var input = form.querySelector('.fighter-name-input');
+        var name = input.value.trim();
+        if(!name){ input.focus(); return; }
+        fight.fighters.push({ id: makeId(), name: name });
+        openForms[fight.id] = null;
+        saveFights();
+        renderFights();
+      });
+    });
+    Array.prototype.forEach.call(fightsContainer.querySelectorAll('[data-remove-fighter]'), function(btn){
+      btn.addEventListener('click', function(){
+        var parts = btn.dataset.removeFighter.split('|');
+        var fight = findFight(parts[0]);
+        if(fight){
+          fight.fighters = fight.fighters.filter(function(f){ return f.id !== parts[1]; });
+          saveFights();
+          renderFights();
+        }
+      });
+    });
+    Array.prototype.forEach.call(fightsContainer.querySelectorAll('[data-add-move]'), function(btn){
+      btn.addEventListener('click', function(){
+        openForms[btn.dataset.addMove] = 'move';
+        renderFights();
+      });
+    });
+    Array.prototype.forEach.call(fightsContainer.querySelectorAll('[data-confirm-move]'), function(btn){
+      btn.addEventListener('click', function(){
+        var fight = findFight(btn.dataset.confirmMove);
+        var form = btn.closest('.inline-form');
+        var moveSelect = form.querySelector('.move-select');
+        if(!moveSelect || !moveSelect.value){ return; }
+        var fighterName = '';
+        var fSelect = form.querySelector('.move-fighter-select');
+        var fText = form.querySelector('.move-fighter-select-text');
+        if(fSelect) fighterName = fSelect.value;
+        else if(fText) fighterName = fText.value.trim();
+        fight.items.push({ type:'move', moveId: moveSelect.value, fighterName: fighterName });
+        openForms[fight.id] = null;
+        saveFights();
+        renderFights();
+      });
+    });
+    Array.prototype.forEach.call(fightsContainer.querySelectorAll('[data-add-note]'), function(btn){
+      btn.addEventListener('click', function(){
+        openForms[btn.dataset.addNote] = 'note';
+        renderFights();
+        var ta = fightsContainer.querySelector('[data-note-form="' + btn.dataset.addNote + '"] .note-text-input');
+        if(ta) ta.focus();
+      });
+    });
+    Array.prototype.forEach.call(fightsContainer.querySelectorAll('[data-confirm-note]'), function(btn){
+      btn.addEventListener('click', function(){
+        var fight = findFight(btn.dataset.confirmNote);
+        var form = btn.closest('.inline-form');
+        var ta = form.querySelector('.note-text-input');
+        var text = ta.value.trim();
+        if(!text){ ta.focus(); return; }
+        fight.items.push({ type:'note', text: text });
+        openForms[fight.id] = null;
+        saveFights();
+        renderFights();
+      });
+    });
+    Array.prototype.forEach.call(fightsContainer.querySelectorAll('[data-cancel-form]'), function(btn){
+      btn.addEventListener('click', function(){
+        openForms[btn.dataset.cancelForm] = null;
+        renderFights();
+      });
+    });
+    Array.prototype.forEach.call(fightsContainer.querySelectorAll('[data-remove-item]'), function(btn){
+      btn.addEventListener('click', function(){
+        var parts = btn.dataset.removeItem.split('|');
+        var fight = findFight(parts[0]);
+        if(fight){
+          fight.items.splice(+parts[1], 1);
+          saveFights();
+          renderFights();
+        }
+      });
+    });
+    Array.prototype.forEach.call(fightsContainer.querySelectorAll('[data-copy-fight]'), function(btn){
+      btn.addEventListener('click', function(){
+        var fight = findFight(btn.dataset.copyFight);
+        if(!fight) return;
+        var text = fight.name.toUpperCase() + '\n';
+        if(fight.fighters.length){
+          text += 'K\u00e4mpfer: ' + fight.fighters.map(function(f){ return f.name; }).join(' vs. ') + '\n';
+        }
+        text += '\n';
+        fight.items.forEach(function(item){
+          if(item.type === 'note'){
+            text += '  * ' + item.text + '\n';
+          } else {
+            var move = findMoveById(item.moveId);
+            var moveName = move ? move.name : '(gel\u00f6schte Technik)';
+            text += (item.fighterName ? item.fighterName + ': ' : '') + moveName + '\n';
+          }
+        });
+        var original = btn.textContent;
+        function flash(){ btn.textContent = 'Kopiert!'; setTimeout(function(){ btn.textContent = original; }, 1500); }
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(text).then(flash).catch(function(){ window.prompt('Diesen Text kopieren:', text); });
+        } else {
+          window.prompt('Diesen Text kopieren:', text);
+        }
+      });
+    });
+  }
+
+  document.getElementById('create-fight-btn').addEventListener('click', createFight);
+  renderFights();
+
 
   /* ================= TABS ================= */
   var tabButtons = document.querySelectorAll('.tab-btn');
-  var panels = { archive: document.getElementById('panel-archive'), generator: document.getElementById('panel-generator') };
+  var panels = { archive: document.getElementById('panel-archive'), editor: document.getElementById('panel-editor') };
   Array.prototype.forEach.call(tabButtons, function(btn){
     btn.addEventListener('click', function(){
       Array.prototype.forEach.call(tabButtons, function(b){ b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
