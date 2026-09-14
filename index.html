@@ -45,8 +45,18 @@
   .hidden{ display:none !important; }
 
   /* ---------- Kopfbereich ---------- */
-  header.masthead{ padding: 2.2rem 1.5rem 0; text-align:center; }
-  header.masthead .eyebrow{ font-size:0.8rem; color:var(--paper-dim); margin-bottom:0.4rem; }
+  header.masthead{ padding: 2.2rem 1.5rem 0; text-align:center; position:relative; }
+  .countdown-badge{
+    position:absolute; top:0; right:1.5rem;
+    background:var(--doubleteam); color:var(--ink);
+    font-family:'Anton', sans-serif; text-transform:uppercase;
+    font-size:0.85rem; line-height:1.25; padding:0.5rem 0.8rem;
+    border-radius:2px; text-align:center; white-space:nowrap;
+  }
+  @media (max-width: 640px){
+    header.masthead{ padding-top:1.4rem; }
+    .countdown-badge{ position:static; display:inline-block; margin-bottom:0.8rem; }
+  }
   header.masthead h1{
     font-size:clamp(2.2rem, 7vw, 4.4rem);
     text-transform:uppercase;
@@ -54,7 +64,6 @@
     color:var(--paper);
     text-shadow: 3px 3px 0 var(--schlaege);
   }
-  header.masthead p.tagline{ max-width:34rem; margin:0.9rem auto 0; color:var(--paper-dim); font-size:1rem; }
   .rope-bars{ display:flex; margin-top:1.6rem; height:6px; }
   .rope-bars span{ flex:1; }
   .rope-bars span:nth-child(1){ background:var(--schlaege); }
@@ -114,6 +123,11 @@
   .tag.risk-moderate{ border-color:#A9720F; color:#A9720F; }
   .tag.risk-high{ border-color:#B23A2E; color:#B23A2E; }
   .move-card-body p{ font-size:0.92rem; line-height:1.42; margin:0.55rem 0 0; }
+  .watch-link{
+    display:inline-block; margin-top:0.65rem; font-family:'Anton', sans-serif;
+    text-transform:uppercase; letter-spacing:0.02em; font-size:0.76rem;
+    background:var(--ink); color:var(--card); padding:0.35rem 0.7rem; text-decoration:none;
+  }
 
   /* ---------- Generator ---------- */
   .gen-panel-block{ background:var(--bg-raised); border:1px solid var(--line); padding:1.1rem 1.2rem; margin-bottom:1.1rem; }
@@ -158,9 +172,8 @@
 <body>
 
 <header class="masthead">
-  <div class="eyebrow">Ein Fan-Archiv &amp; Karten-Baukasten</div>
+  <div class="countdown-badge" id="countdown-badge"></div>
   <h1>Weird Wrestling Organizer</h1>
-  <p class="tagline">Techniken nach Kategorie durchstöbern und daraus die nächste Match-Karte zusammenstellen.</p>
   <div class="rope-bars"><span></span><span></span><span></span><span></span></div>
 </header>
 
@@ -208,7 +221,6 @@
           <button type="button" class="chip active" data-risk="moderate" aria-pressed="true">Mittel</button>
           <button type="button" class="chip" data-risk="high" aria-pressed="false">Hoch</button>
         </div>
-        <span style="font-size:0.78rem;color:var(--paper-dim);">Hochriskante Techniken (Piledriver, große Flugtechniken) brauchen trainierte Performer und echte Matten. Für eine unbedenkliche Karte einfach deaktiviert lassen.</span>
       </div>
       <div class="wrestler-field" style="margin-bottom:0.9rem;">
         <label>Teilnehmerzahl
@@ -237,7 +249,6 @@
 </main>
 
 <footer>
-  <p>Die 13 Kategorien und alle 187 Techniken-Namen stammen aus einer von dir selbst zusammengestellten Tabelle (Wikipedia-Recherche). Alle Beschreibungen sowie die Einstufung nach Schwierigkeitsgrad und Risiko wurden für diese App neu und in eigenen Worten formuliert.</p>
   <p>Diese App dient der Inspiration für Matchplanung und Choreografie, nicht als Trainingsanleitung. Nur mit professionellem Training und auf geeigneten Matten ausprobieren — und nie eine Technik versuchen, aus der man nicht sicher wieder herausfallen kann.</p>
 </footer>
 
@@ -504,6 +515,24 @@
     });
   }
 
+  function youtubeSearchUrl(name){
+    return 'https://www.youtube.com/results?search_query=' + encodeURIComponent(name + ' wrestling move');
+  }
+
+  /* ================= COUNTDOWN ================= */
+  function renderCountdown(){
+    var el = document.getElementById('countdown-badge');
+    if(!el) return;
+    var now = new Date();
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    var target = new Date(now.getFullYear(), 10, 14); // 14. November
+    if(target < today){ target = new Date(now.getFullYear() + 1, 10, 14); }
+    var days = Math.round((target - today) / 86400000);
+    var text = days === 0 ? 'Heute ist die Show!' : (days + (days === 1 ? ' Tag bis zur Show' : ' Tage bis zur Show'));
+    el.textContent = text;
+  }
+  renderCountdown();
+
   function buildCategoryChips(container, stateSet, onChange){
     container.innerHTML = '';
     Object.keys(CATEGORIES).forEach(function(key){
@@ -563,6 +592,7 @@
               '<span class="tag risk-' + m.risk + '">' + RISK_LABELS[m.risk] + '</span>' +
             '</div>' +
             '<p>' + escapeHtml(m.desc) + '</p>' +
+            '<a class="watch-link" href="' + youtubeSearchUrl(m.name) + '" target="_blank" rel="noopener">Video suchen \u2197</a>' +
           '</div>' +
         '</article>';
     }).join('');
