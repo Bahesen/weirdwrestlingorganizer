@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#15131A">
+<title>Weird Wrestling Organizer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#15131A;
+    --bg-raised:#1E1B24;
+    --card:#F4EFE1;
+    --ink:#1B1A22;
+    --paper:#F4EFE1;
+    --paper-dim:#C9C2AE;
+    --line: rgba(244,239,225,0.25);
+    --schlaege:#D8362A;
+    --wuerfe:#2E6E9E;
+    --submission:#7A4FA0;
+    --flug:#3E8E62;
+    --doubleteam:#E8A63A;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    background-image:
+      repeating-linear-gradient(135deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 2px, transparent 2px, transparent 14px);
+    color:var(--paper);
+    font-family:'Barlow', sans-serif;
+    min-height:100vh;
+  }
+  h1,h2,h3{
+    font-family:'Anton', sans-serif;
+    font-weight:400;
+    letter-spacing:0.01em;
+    margin:0;
+  }
+  a{color:inherit;}
+  button, select, input{ font-family:inherit; }
+  :focus-visible{ outline:3px solid var(--doubleteam); outline-offset:2px; }
+  .hidden{ display:none !important; }
+
+  /* ---------- Kopfbereich ---------- */
+  header.masthead{ padding: 2.2rem 1.5rem 0; text-align:center; }
+  header.masthead .eyebrow{ font-size:0.8rem; color:var(--paper-dim); margin-bottom:0.4rem; }
+  header.masthead h1{
+    font-size:clamp(2.2rem, 7vw, 4.4rem);
+    text-transform:uppercase;
+    line-height:0.95;
+    color:var(--paper);
+    text-shadow: 3px 3px 0 var(--schlaege);
+  }
+  header.masthead p.tagline{ max-width:34rem; margin:0.9rem auto 0; color:var(--paper-dim); font-size:1rem; }
+  .rope-bars{ display:flex; margin-top:1.6rem; height:6px; }
+  .rope-bars span{ flex:1; }
+  .rope-bars span:nth-child(1){ background:var(--schlaege); }
+  .rope-bars span:nth-child(2){ background:var(--doubleteam); }
+  .rope-bars span:nth-child(3){ background:var(--flug); }
+  .rope-bars span:nth-child(4){ background:var(--submission); }
+
+  /* ---------- Tabs ---------- */
+  nav.tabs{ display:flex; max-width:60rem; margin:0 auto; padding: 0 1.5rem; }
+  .tab-btn{
+    flex:1; background:var(--bg-raised); color:var(--paper-dim); border:none;
+    border-bottom:4px solid transparent; padding:0.9rem 1rem;
+    font-family:'Anton', sans-serif; font-size:1rem; text-transform:uppercase;
+    letter-spacing:0.03em; cursor:pointer;
+  }
+  .tab-btn.active{ color:var(--paper); border-bottom-color:var(--doubleteam); background:var(--bg); }
+
+  main{ max-width:60rem; margin:0 auto; padding:1.8rem 1.5rem 4rem; }
+
+  /* ---------- Steuerelemente ---------- */
+  .controls{ display:flex; flex-direction:column; gap:0.9rem; margin-bottom:1.6rem; }
+  .controls-row{ display:flex; gap:0.9rem; flex-wrap:wrap; align-items:center; }
+  input[type="text"], input[type="search"], select{
+    background:var(--bg-raised); color:var(--paper); border:none;
+    border-bottom:2px solid var(--line); padding:0.55rem 0.6rem; font-size:0.95rem;
+  }
+  #move-search{ flex:1; min-width:12rem; }
+  .chip-row{ display:flex; gap:0.5rem; flex-wrap:wrap; }
+  .chip{
+    font-weight:600; font-size:0.82rem; padding:0.4rem 0.8rem;
+    border:2px solid var(--chip-color, var(--line)); border-radius:3px;
+    background:transparent; color:var(--paper); cursor:pointer;
+  }
+  .chip.active{ background:var(--chip-color, var(--doubleteam)); color:var(--ink); border-color:var(--chip-color, var(--doubleteam)); }
+  label.checkbox-label{ display:flex; align-items:center; gap:0.4rem; font-size:0.9rem; color:var(--paper-dim); cursor:pointer; }
+  .field-group{ display:flex; flex-direction:column; gap:0.3rem; }
+  .field-group span.field-title{ font-size:0.85rem; color:var(--paper-dim); }
+  #archive-count{ font-size:0.85rem; color:var(--paper-dim); margin:0 0 0.6rem; }
+
+  /* ---------- Techniken-Raster ---------- */
+  #archive-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(270px, 1fr)); gap:1rem; }
+  .move-card{ background:var(--card); color:var(--ink); border:1px solid rgba(0,0,0,0.12); overflow:hidden; }
+  .move-card-bar{ height:6px; background:var(--card-accent); }
+  .move-card-body{ padding:0.9rem 1.05rem 1.1rem; }
+  .move-card-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:0.5rem; }
+  .move-card-head h3{ font-size:1.15rem; text-transform:uppercase; }
+  .fav-btn{ background:none; border:none; font-size:1.35rem; line-height:1; color:var(--doubleteam); opacity:0.45; cursor:pointer; padding:0; }
+  .fav-btn.active{ opacity:1; }
+  .move-card-tags{ display:flex; gap:0.35rem; flex-wrap:wrap; margin:0.55rem 0; }
+  .tag{
+    font-size:0.68rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:2px;
+    border:1px solid transparent; text-transform:uppercase; letter-spacing:0.02em;
+  }
+  .tag.cat-tag{ background:var(--tag-color); color:#fff; }
+  .tag.tier-tag{ border-color:rgba(0,0,0,0.4); color:rgba(0,0,0,0.7); }
+  .tag.risk-low{ border-color:#2E7D4F; color:#2E7D4F; }
+  .tag.risk-moderate{ border-color:#A9720F; color:#A9720F; }
+  .tag.risk-high{ border-color:#B23A2E; color:#B23A2E; }
+  .move-card-body p{ font-size:0.92rem; line-height:1.42; margin:0.55rem 0 0; }
+
+  /* ---------- Generator ---------- */
+  .gen-panel-block{ background:var(--bg-raised); border:1px solid var(--line); padding:1.1rem 1.2rem; margin-bottom:1.1rem; }
+  .gen-panel-block h2{ font-size:1.1rem; text-transform:uppercase; margin-bottom:0.8rem; color:var(--doubleteam); }
+  #wrestler-fields{ display:flex; flex-direction:column; gap:0.9rem; }
+  .wrestler-field{ display:flex; gap:0.9rem; flex-wrap:wrap; }
+  .wrestler-field label{ display:flex; flex-direction:column; gap:0.3rem; font-size:0.85rem; color:var(--paper-dim); flex:1; min-width:11rem; }
+  .action-row{ display:flex; gap:0.8rem; flex-wrap:wrap; margin-top:0.4rem; }
+  .btn-primary, .btn-secondary{
+    font-family:'Anton', sans-serif; text-transform:uppercase; letter-spacing:0.03em;
+    font-size:0.92rem; padding:0.65rem 1.2rem; border:none; cursor:pointer;
+  }
+  .btn-primary{ background:var(--schlaege); color:#fff; }
+  .btn-secondary{ background:transparent; color:var(--paper); border:2px solid var(--line); }
+
+  #card-output{ margin-top:1.4rem; }
+  .card-stip{
+    background:var(--schlaege); color:#fff; font-family:'Anton', sans-serif;
+    text-transform:uppercase; text-align:center; padding:0.7rem 1rem; font-size:1.1rem; letter-spacing:0.02em;
+  }
+  .card-columns{ display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1rem; margin-top:1rem; }
+  .wrestler-column{ background:var(--card); color:var(--ink); padding:1rem 1.1rem; }
+  .wrestler-column-head{ display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.6rem; }
+  .wrestler-column-head h3{ font-size:1.1rem; text-transform:uppercase; margin-right:auto; }
+  .archetype-pill{ font-size:0.7rem; font-weight:700; text-transform:uppercase; background:var(--doubleteam); color:var(--ink); padding:0.15rem 0.5rem; border-radius:2px; }
+  .reroll-btn{ background:transparent; border:1px solid rgba(0,0,0,0.3); color:var(--ink); font-size:0.75rem; padding:0.25rem 0.55rem; cursor:pointer; }
+  .beat-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0.5rem; }
+  .beat-list li{ display:flex; align-items:baseline; gap:0.45rem; flex-wrap:wrap; font-size:0.88rem; border-bottom:1px dashed rgba(0,0,0,0.15); padding-bottom:0.4rem; }
+  .beat-label{ font-size:0.72rem; text-transform:uppercase; color:rgba(0,0,0,0.55); flex:0 0 6.5rem; }
+  .beat-dot{ width:0.6rem; height:0.6rem; border-radius:50%; background:var(--dot-color); display:inline-block; }
+  .beat-name{ font-weight:600; }
+  .beat-empty{ font-style:italic; color:rgba(0,0,0,0.5); }
+
+  footer{
+    max-width:60rem; margin:2rem auto 0; padding:1.5rem 1.5rem 3rem;
+    color:var(--paper-dim); font-size:0.82rem; line-height:1.5; border-top:1px solid var(--line);
+  }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="eyebrow">Ein Fan-Archiv &amp; Karten-Baukasten</div>
+  <h1>Weird Wrestling Organizer</h1>
+  <p class="tagline">Techniken nach Kategorie durchstöbern und daraus die nächste Match-Karte zusammenstellen.</p>
+  <div class="rope-bars"><span></span><span></span><span></span><span></span></div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button class="tab-btn active" data-tab="archive" role="tab" aria-selected="true">Techniken-Archiv</button>
+  <button class="tab-btn" data-tab="generator" role="tab" aria-selected="false">Match-Generator</button>
+</nav>
+
+<main>
+
+  <section id="panel-archive">
+    <div class="controls">
+      <div class="controls-row">
+        <input type="search" id="move-search" placeholder="Techniken durchsuchen…" aria-label="Techniken durchsuchen">
+        <label class="checkbox-label"><input type="checkbox" id="fav-only-toggle"> Nur Favoriten</label>
+      </div>
+      <div class="field-group">
+        <span class="field-title">Kategorie</span>
+        <div class="chip-row" id="archive-cat-chips"></div>
+      </div>
+      <div class="field-group">
+        <span class="field-title">Schwierigkeitsgrad</span>
+        <div class="chip-row" id="archive-tier-chips">
+          <button type="button" class="chip active" data-tier="basic" aria-pressed="true">Basis</button>
+          <button type="button" class="chip active" data-tier="signature" aria-pressed="true">Signature</button>
+          <button type="button" class="chip active" data-tier="finisher" aria-pressed="true">Finisher</button>
+        </div>
+      </div>
+    </div>
+    <p id="archive-count"></p>
+    <div id="archive-grid"></div>
+  </section>
+
+  <section id="panel-generator" class="hidden">
+    <div class="gen-panel-block">
+      <h2>Karten-Einstellungen</h2>
+      <div class="field-group" style="margin-bottom:0.9rem;">
+        <span class="field-title">Kategorien für die Auswahl</span>
+        <div class="chip-row" id="gen-cat-chips"></div>
+      </div>
+      <div class="field-group" style="margin-bottom:0.9rem;">
+        <span class="field-title">Risikostufe einbeziehen</span>
+        <div class="chip-row" id="gen-risk-chips">
+          <button type="button" class="chip active" data-risk="low" aria-pressed="true">Gering</button>
+          <button type="button" class="chip active" data-risk="moderate" aria-pressed="true">Mittel</button>
+          <button type="button" class="chip" data-risk="high" aria-pressed="false">Hoch</button>
+        </div>
+        <span style="font-size:0.78rem;color:var(--paper-dim);">Hochriskante Techniken (Piledriver, große Flugtechniken) brauchen trainierte Performer und echte Matten. Für eine unbedenkliche Karte einfach deaktiviert lassen.</span>
+      </div>
+      <div class="wrestler-field" style="margin-bottom:0.9rem;">
+        <label>Teilnehmerzahl
+          <select id="wrestler-count">
+            <option value="2" selected>2 (Einzelmatch)</option>
+            <option value="3">3</option>
+            <option value="4">4 (Tag-Team-Paarung)</option>
+          </select>
+        </label>
+        <label>Stipulation
+          <select id="stipulation-select"></select>
+        </label>
+      </div>
+      <div id="wrestler-fields"></div>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-primary" id="generate-btn" type="button">Match-Karte erstellen</button>
+      <button class="btn-secondary" id="reroll-all-btn" type="button">Alles neu würfeln</button>
+      <button class="btn-secondary" id="copy-btn" type="button">Karte als Text kopieren</button>
+    </div>
+
+    <div id="card-output"></div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Kategorien und Technikliste orientieren sich an der deutschen Wikipedia-Übersicht „Liste von Wrestling-Kampftechniken“ (de.wikipedia.org). Die Beschreibungen hier wurden für diese App komplett neu und in eigenen Worten formuliert. Bei ein paar Techniken war der Name in der Quelltabelle beim Abruf nicht eindeutig zuzuordnen — dort wurde die naheliegendste, gängige Bezeichnung verwendet.</p>
+  <p>Diese App dient der Inspiration für Matchplanung und Choreografie, nicht als Trainingsanleitung. Nur mit professionellem Training und auf geeigneten Matten ausprobieren — und nie eine Technik versuchen, aus der man nicht sicher wieder herausfallen kann.</p>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  var CATEGORIES = {
+    submission:  { label:'Submission-Aktionen',        color:'#7A4FA0', blurb:'Griffe und Klammern, die den Gegner zur Aufgabe zwingen.' },
+    wuerfe:      { label:'Würfe &amp; Slams',           color:'#2E6E9E', blurb:'Techniken, bei denen der Gegner hochgehoben und zu Boden gebracht wird.' },
+    schlaege:    { label:'Schläge &amp; Tritte',        color:'#D8362A', blurb:'Handkanten, Tritte und Rammaktionen im Stand.' },
+    flug:        { label:'Sprung- &amp; Flugtechniken', color:'#3E8E62', blurb:'Aktionen von den Seilen oder der Ringecke.' },
+    doubleteam:  { label:'Double-Team-Moves',           color:'#E8A63A', blurb:'Kombinationen, für die zwei Wrestler gleichzeitig nötig sind.' }
+  };
+
+  var ARCHETYPES = {
+    flieger:    { label:'Flieger',     weights:{ flug:45, schlaege:20, wuerfe:15, doubleteam:10, submission:10 } },
+    kraftpaket: { label:'Kraftpaket',  weights:{ wuerfe:45, schlaege:20, doubleteam:15, flug:10, submission:10 } },
+    techniker:  { label:'Techniker',   weights:{ submission:40, wuerfe:25, schlaege:15, doubleteam:10, flug:10 } },
+    raufbold:   { label:'Raufbold',    weights:{ schlaege:45, wuerfe:20, doubleteam:15, flug:10, submission:10 } },
+    allrounder: { label:'Allrounder',  weights:{ submission:20, wuerfe:20, schlaege:20, flug:20, doubleteam:20 } }
+  };
+
+  var STIPULATIONS = [
+    'Standard-Einzelmatch',
+    'Match ohne Disqualifikation',
+    'Sieg überall im Gebäude',
+    'Leiter-Match',
+    'Tisch-Match',
+    'Stahlkäfig-Match',
+    'Last-Wrestler-Standing-Match',
+    'Backyard-Rumble',
+    'Match mit Augenbinde',
+    'Lumberjack-Match',
+    'Hardcore-Match (alles erlaubt)',
+    'Iron-Wrestler-Zeitlimit-Match',
+    'Kostüm- &amp; Gimmick-Match',
+    'Reise-nach-Jerusalem-Brawl'
+  ];
+
+  var BEATS = [
+    { key:'opening', label:'Auftakt',     tierPref:['basic'] },
+    { key:'control',  label:'Kontrolle',   tierPref:['basic','signature'] },
+    { key:'turning',  label:'Wendepunkt',  tierPref:['signature','basic'] },
+    { key:'bigspot',  label:'Highlight',   tierPref:['signature','finisher'] },
+    { key:'finish',   label:'Finish',      tierPref:['finisher','signature'] }
+  ];
+
+  var TIER_LABELS = { basic:'Basis', signature:'Signature', finisher:'Finisher' };
+  var RISK_LABELS = { low:'Geringes Risiko', moderate:'Mittleres Risiko', high:'Hohes Risiko' };
+
+  var MOVES = [
+    // ---- Submission-Aktionen ----
+    { id:'cobra_clutch', name:'Cobra Clutch', category:'submission', tier:'basic', risk:'low', desc:'Der Angreifer packt den Gegner von hinten am Hals und presst mit dem freien Arm zusätzlich auf den Kehlkopf.' },
+    { id:'sharpshooter', name:'Sharpshooter', category:'submission', tier:'signature', risk:'moderate', desc:'Beide Beine des Gegners werden gekreuzt und festgehalten, während sich der Angreifer zurücklehnt und die Wirbelsäule dehnt.' },
+    { id:'testicular_claw', name:'Testicular Claw', category:'submission', tier:'basic', risk:'low', desc:'Eine Krallen-Aktion, die im Wrestling meist als komödiantische Einlage statt als ernsthafte Schmerztechnik eingesetzt wird.' },
+
+    // ---- Würfe & Slams ----
+    { id:'olympic_slam', name:'Olympic Slam', category:'wuerfe', tier:'basic', risk:'moderate', desc:'Der Gegner wird über die Schultern gehoben und mit dem Rücken zuerst auf die Matte geworfen.' },
+    { id:'side_slam', name:'Side Slam', category:'wuerfe', tier:'basic', risk:'moderate', desc:'Der Gegner wird seitlich am Körper angehoben und durch eine Drehung des Oberkörpers zu Boden gebracht.' },
+    { id:'backbreaker_klassisch', name:'Backbreaker (klassisch)', category:'wuerfe', tier:'basic', risk:'low', desc:'Der Gegner wird waagerecht über dem angewinkelten Knie des Angreifers gehalten und mit dem Rücken darauf fallen gelassen.' },
+    { id:'tilt_a_whirl_backbreaker', name:'Tilt-A-Whirl Backbreaker', category:'wuerfe', tier:'signature', risk:'moderate', desc:'Der Angreifer fängt den aus den Seilen zurückfedernden Gegner auf, dreht ihn einmal um die eigene Achse und lässt ihn mit dem Rücken auf das ausgestreckte Knie fallen.' },
+    { id:'ddt', name:'DDT', category:'wuerfe', tier:'signature', risk:'moderate', desc:'Der Kopf des vorgebeugten Gegners wird unter dem Arm eingeklemmt, bevor sich der Angreifer nach hinten fallen lässt und den Kopf des Gegners auf die Matte drückt.' },
+    { id:'piledriver', name:'Piledriver', category:'wuerfe', tier:'finisher', risk:'high', desc:'Der Gegner wird kopfüber gehalten, während sich der Angreifer schnell hinsetzt und den Kopf des Gegners kontrolliert auf den Ringboden treffen lässt.' },
+    { id:'tombstone_piledriver', name:'Tombstone Piledriver', category:'wuerfe', tier:'finisher', risk:'high', desc:'Eine Piledriver-Variante, bei der sich der Angreifer hinkniet und den kopfüber gehaltenen Gegner kontrolliert auf die eigenen Knie aufkommen lässt.' },
+    { id:'powerbomb', name:'Powerbomb', category:'wuerfe', tier:'finisher', risk:'high', desc:'Der Gegner wird auf die Schultern des Angreifers gehoben und anschließend mit dem Rücken zuerst auf die Matte geschleudert.' },
+    { id:'delayed_vertical_suplex', name:'Delayed Vertical Suplex', category:'wuerfe', tier:'signature', risk:'moderate', desc:'Der Gegner wird kopfüber in der Luft gehalten, bevor sich der Angreifer nach hinten fallen lässt und beide auf dem Rücken landen.' },
+    { id:'atomic_drop', name:'Atomic Drop', category:'wuerfe', tier:'basic', risk:'low', desc:'Der von hinten gepackte Gegner wird angehoben und mit dem Gesäß auf das Knie des Angreifers fallen gelassen.' },
+
+    // ---- Schläge & Tritte ----
+    { id:'bell_clap', name:'Bell Clap', category:'schlaege', tier:'basic', risk:'moderate', desc:'Mit beiden flachen Händen wird gleichzeitig seitlich auf die Ohren des Gegners geschlagen.' },
+    { id:'chop', name:'Chop', category:'schlaege', tier:'basic', risk:'low', desc:'Ein Handkantenschlag quer über die Brust des Gegners, der vor allem durch sein lautes Geräusch wirkt.' },
+    { id:'mongolian_chop', name:'Mongolian Chop', category:'schlaege', tier:'basic', risk:'low', desc:'Eine Chop-Variante, bei der mit einer oder beiden Händen in einer vertikalen Schwungbewegung auf den Nacken des Gegners geschlagen wird.' },
+    { id:'hip_attack', name:'Hip Attack', category:'schlaege', tier:'basic', risk:'low', desc:'Der Angreifer rammt den in der Ringecke oder an den Seilen stehenden Gegner mit der Hüfte.' },
+    { id:'spear', name:'Spear', category:'schlaege', tier:'signature', risk:'moderate', desc:'Der Angreifer läuft geduckt auf den Gegner zu und trifft ihn mit der Schulter im Bauch, wodurch beide zu Boden gehen.' },
+    { id:'big_boot', name:'Big Boot', category:'schlaege', tier:'basic', risk:'low', desc:'Ein gestreckter Tritt, der den heranlaufenden Gegner mit der Stiefelsohle im Gesicht trifft.' },
+
+    // ---- Sprung- & Flugtechniken ----
+    { id:'big_splash', name:'Big Splash', category:'flug', tier:'signature', risk:'moderate', desc:'Der Angreifer nimmt in den Seilen Anlauf und springt mit dem Bauch voran auf den am Boden liegenden Gegner.' },
+    { id:'diving_headbutt', name:'Diving Headbutt', category:'flug', tier:'signature', risk:'high', desc:'Der Angreifer lässt sich von den Seilen kopfüber auf den am Boden liegenden Gegner fallen.' },
+    { id:'kneedrop', name:'Kneedrop', category:'flug', tier:'basic', risk:'low', desc:'Der Angreifer springt und lässt das angewinkelte Knie auf einen liegenden Körperteil des Gegners niedersausen.' },
+    { id:'legdrop', name:'Legdrop', category:'flug', tier:'basic', risk:'low', desc:'Der Angreifer springt und lässt das gestreckte Bein quer über den liegenden Gegner fallen.' },
+    { id:'crossed_hand_of_god', name:'Crossed Hand of God', category:'flug', tier:'signature', risk:'moderate', desc:'Von der obersten Ringecke springt der Angreifer mit vor der Brust gekreuzten Armen ab und trifft den liegenden Gegner am Hals.' },
+    { id:'crossbody', name:'Crossbody', category:'flug', tier:'basic', risk:'low', desc:'Der Angreifer springt von erhöhter Position ab und landet quer auf dem Oberkörper des stehenden Gegners.' },
+    { id:'moonsault', name:'Moonsault', category:'flug', tier:'signature', risk:'moderate', desc:'Ein rückwärtiger Salto von der obersten Ringecke, bei dem der Angreifer auf dem liegenden Gegner landet.' },
+    { id:'triple_jump_moonsault', name:'Triple Jump Moonsault', category:'flug', tier:'finisher', risk:'high', desc:'Ein Moonsault, dem mehrere Zwischensprünge vorausgehen, um zusätzliche Höhe und Schwung für die Aktion zu gewinnen.' },
+    { id:'four_fifty_splash', name:'450°-Splash', category:'flug', tier:'finisher', risk:'high', desc:'Eine Salto-Variante mit anderthalb Drehungen, bevor der Angreifer quer auf dem liegenden Gegner landet.' },
+    { id:'whisper_in_the_wind', name:'Whisper in the Wind', category:'flug', tier:'signature', risk:'moderate', desc:'Der Angreifer springt von den Seilen ab, dreht sich in der Luft um 180 Grad und trifft den Gegner mit dem Fuß an der Schulter.' },
+
+    // ---- Double-Team-Moves ----
+    { id:'backbreaker_hold_combination', name:'Backbreaker Hold Combination', category:'doubleteam', tier:'signature', risk:'moderate', desc:'Ein Wrestler hält den Gegner über dem eigenen Knie, während der Partner von den Seilen kommend mit Ellenbogen oder Bein den Kopf des Gegners trifft.' }
+  ];
+
+  var FAV_KEY = 'wwo-favorites-v1';
+  function loadFavorites(){
+    try{ return new Set(JSON.parse(localStorage.getItem(FAV_KEY) || '[]')); }
+    catch(e){ return new Set(); }
+  }
+  function saveFavorites(set){
+    try{ localStorage.setItem(FAV_KEY, JSON.stringify(Array.from(set))); }
+    catch(e){ /* Speicher nicht verfügbar, ignorieren */ }
+  }
+  var favorites = loadFavorites();
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, function(c){
+      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+    });
+  }
+
+  function buildCategoryChips(container, stateSet, onChange){
+    container.innerHTML = '';
+    Object.keys(CATEGORIES).forEach(function(key){
+      var cat = CATEGORIES[key];
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'chip' + (stateSet.has(key) ? ' active' : '');
+      btn.style.setProperty('--chip-color', cat.color);
+      btn.textContent = cat.label;
+      btn.setAttribute('aria-pressed', stateSet.has(key) ? 'true' : 'false');
+      btn.addEventListener('click', function(){
+        if(stateSet.has(key)){ stateSet.delete(key); } else { stateSet.add(key); }
+        btn.classList.toggle('active');
+        btn.setAttribute('aria-pressed', stateSet.has(key) ? 'true' : 'false');
+        onChange();
+      });
+      container.appendChild(btn);
+    });
+  }
+
+  /* ================= ARCHIV ================= */
+  var archiveState = {
+    search: '',
+    categories: new Set(Object.keys(CATEGORIES)),
+    tiers: new Set(['basic','signature','finisher']),
+    favoritesOnly: false
+  };
+
+  var archiveGrid = document.getElementById('archive-grid');
+  var archiveCount = document.getElementById('archive-count');
+  var searchInput = document.getElementById('move-search');
+
+  function renderArchive(){
+    var q = archiveState.search.trim().toLowerCase();
+    var results = MOVES.filter(function(m){
+      if(!archiveState.categories.has(m.category)) return false;
+      if(!archiveState.tiers.has(m.tier)) return false;
+      if(archiveState.favoritesOnly && !favorites.has(m.id)) return false;
+      if(q && m.name.toLowerCase().indexOf(q) === -1 && m.desc.toLowerCase().indexOf(q) === -1) return false;
+      return true;
+    });
+    archiveCount.textContent = results.length + (results.length === 1 ? ' Technik' : ' Techniken');
+    archiveGrid.innerHTML = results.map(function(m){
+      var cat = CATEGORIES[m.category];
+      var starred = favorites.has(m.id);
+      return '' +
+        '<article class="move-card" style="--card-accent:' + cat.color + '">' +
+          '<div class="move-card-bar"></div>' +
+          '<div class="move-card-body">' +
+            '<div class="move-card-head">' +
+              '<h3>' + escapeHtml(m.name) + '</h3>' +
+              '<button class="fav-btn' + (starred ? ' active' : '') + '" data-id="' + m.id + '" aria-pressed="' + starred + '" aria-label="' + escapeHtml(m.name) + ' zu Favoriten hinzufügen">' + (starred ? '\u2605' : '\u2606') + '</button>' +
+            '</div>' +
+            '<div class="move-card-tags">' +
+              '<span class="tag cat-tag" style="--tag-color:' + cat.color + '">' + cat.label + '</span>' +
+              '<span class="tag tier-tag">' + TIER_LABELS[m.tier] + '</span>' +
+              '<span class="tag risk-' + m.risk + '">' + RISK_LABELS[m.risk] + '</span>' +
+            '</div>' +
+            '<p>' + escapeHtml(m.desc) + '</p>' +
+          '</div>' +
+        '</article>';
+    }).join('');
+    Array.prototype.forEach.call(archiveGrid.querySelectorAll('.fav-btn'), function(btn){
+      btn.addEventListener('click', function(){
+        var id = btn.dataset.id;
+        if(favorites.has(id)){ favorites.delete(id); } else { favorites.add(id); }
+        saveFavorites(favorites);
+        renderArchive();
+      });
+    });
+  }
+
+  searchInput.addEventListener('input', function(e){
+    archiveState.search = e.target.value;
+    renderArchive();
+  });
+  buildCategoryChips(document.getElementById('archive-cat-chips'), archiveState.categories, renderArchive);
+  Array.prototype.forEach.call(document.querySelectorAll('#archive-tier-chips [data-tier]'), function(btn){
+    btn.addEventListener('click', function(){
+      var tier = btn.dataset.tier;
+      if(archiveState.tiers.has(tier)){ archiveState.tiers.delete(tier); } else { archiveState.tiers.add(tier); }
+      btn.classList.toggle('active');
+      btn.setAttribute('aria-pressed', archiveState.tiers.has(tier) ? 'true' : 'false');
+      renderArchive();
+    });
+  });
+  document.getElementById('fav-only-toggle').addEventListener('change', function(e){
+    archiveState.favoritesOnly = e.target.checked;
+    renderArchive();
+  });
+  renderArchive();
+
+  /* ================= GENERATOR ================= */
+  var genState = {
+    categories: new Set(Object.keys(CATEGORIES)),
+    risk: new Set(['low','moderate']),
+    wrestlerCount: 2,
+    wrestlers: [
+      { name:'Wrestler A', archetype:'zufall' },
+      { name:'Wrestler B', archetype:'zufall' }
+    ],
+    stipulation: 'zufall'
+  };
+
+  buildCategoryChips(document.getElementById('gen-cat-chips'), genState.categories, function(){});
+  Array.prototype.forEach.call(document.querySelectorAll('#gen-risk-chips [data-risk]'), function(btn){
+    btn.addEventListener('click', function(){
+      var risk = btn.dataset.risk;
+      if(genState.risk.has(risk)){ genState.risk.delete(risk); } else { genState.risk.add(risk); }
+      btn.classList.toggle('active');
+      btn.setAttribute('aria-pressed', genState.risk.has(risk) ? 'true' : 'false');
+    });
+  });
+
+  var wrestlerCountSelect = document.getElementById('wrestler-count');
+  var wrestlerFields = document.getElementById('wrestler-fields');
+  var stipulationSelect = document.getElementById('stipulation-select');
+
+  stipulationSelect.innerHTML = '<option value="zufall">Überrasch mich</option>' +
+    STIPULATIONS.map(function(s){ return '<option value="' + escapeHtml(s) + '">' + escapeHtml(s) + '</option>'; }).join('');
+  stipulationSelect.addEventListener('change', function(e){ genState.stipulation = e.target.value; });
+
+  function renderWrestlerFields(){
+    while(genState.wrestlers.length < genState.wrestlerCount){
+      var idx = genState.wrestlers.length;
+      genState.wrestlers.push({ name:'Wrestler ' + String.fromCharCode(65 + idx), archetype:'zufall' });
+    }
+    genState.wrestlers = genState.wrestlers.slice(0, genState.wrestlerCount);
+
+    wrestlerFields.innerHTML = genState.wrestlers.map(function(w, i){
+      var options = '<option value="zufall"' + (w.archetype === 'zufall' ? ' selected' : '') + '>Zufällig</option>';
+      Object.keys(ARCHETYPES).forEach(function(k){
+        options += '<option value="' + k + '"' + (w.archetype === k ? ' selected' : '') + '>' + ARCHETYPES[k].label + '</option>';
+      });
+      return '' +
+        '<div class="wrestler-field">' +
+          '<label>Name Wrestler ' + (i + 1) +
+            '<input type="text" data-idx="' + i + '" class="wrestler-name" value="' + escapeHtml(w.name) + '" maxlength="40">' +
+          '</label>' +
+          '<label>Stil' +
+            '<select data-idx="' + i + '" class="wrestler-archetype">' + options + '</select>' +
+          '</label>' +
+        '</div>';
+    }).join('');
+
+    Array.prototype.forEach.call(wrestlerFields.querySelectorAll('.wrestler-name'), function(inp){
+      inp.addEventListener('input', function(){
+        var i = +inp.dataset.idx;
+        genState.wrestlers[i].name = inp.value || ('Wrestler ' + String.fromCharCode(65 + i));
+      });
+    });
+    Array.prototype.forEach.call(wrestlerFields.querySelectorAll('.wrestler-archetype'), function(sel){
+      sel.addEventListener('change', function(){
+        genState.wrestlers[+sel.dataset.idx].archetype = sel.value;
+      });
+    });
+  }
+  wrestlerCountSelect.addEventListener('change', function(e){
+    genState.wrestlerCount = +e.target.value;
+    renderWrestlerFields();
+  });
+  renderWrestlerFields();
+
+  function pickCategory(weights, allowedCats){
+    var entries = Object.keys(weights).filter(function(cat){ return allowedCats.has(cat); }).map(function(cat){ return [cat, weights[cat]]; });
+    if(!entries.length) return null;
+    var total = entries.reduce(function(s, e){ return s + e[1]; }, 0);
+    var r = Math.random() * total;
+    for(var i = 0; i < entries.length; i++){
+      if(r < entries[i][1]) return entries[i][0];
+      r -= entries[i][1];
+    }
+    return entries[entries.length - 1][0];
+  }
+
+  function movePool(){
+    var pool = MOVES.filter(function(m){ return genState.categories.has(m.category) && genState.risk.has(m.risk); });
+    if(!pool.length) pool = MOVES.filter(function(m){ return genState.categories.has(m.category); });
+    if(!pool.length) pool = MOVES.slice();
+    return pool;
+  }
+
+  function pickMove(pool, category, tierPrefs, usedIds){
+    var i, c;
+    for(i = 0; i < tierPrefs.length; i++){
+      c = pool.filter(function(m){ return m.category === category && m.tier === tierPrefs[i] && !usedIds.has(m.id); });
+      if(c.length) return c[Math.floor(Math.random() * c.length)];
+    }
+    c = pool.filter(function(m){ return m.category === category && !usedIds.has(m.id); });
+    if(c.length) return c[Math.floor(Math.random() * c.length)];
+    for(i = 0; i < tierPrefs.length; i++){
+      c = pool.filter(function(m){ return m.tier === tierPrefs[i] && !usedIds.has(m.id); });
+      if(c.length) return c[Math.floor(Math.random() * c.length)];
+    }
+    c = pool.filter(function(m){ return !usedIds.has(m.id); });
+    if(c.length) return c[Math.floor(Math.random() * c.length)];
+    return null;
+  }
+
+  function buildWrestlerCard(w){
+    var archKeys = Object.keys(ARCHETYPES);
+    var archetypeKey = w.archetype === 'zufall' ? archKeys[Math.floor(Math.random() * archKeys.length)] : w.archetype;
+    var archetype = ARCHETYPES[archetypeKey];
+    var pool = movePool();
+    var allowedCats = genState.categories.size ? genState.categories : new Set(Object.keys(CATEGORIES));
+    var allowedList = Array.from(allowedCats);
+    var usedIds = new Set();
+    var beats = BEATS.map(function(beat){
+      var cat = pickCategory(archetype.weights, allowedCats) || allowedList[Math.floor(Math.random() * allowedList.length)];
+      var move = pickMove(pool, cat, beat.tierPref, usedIds);
+      if(move) usedIds.add(move.id);
+      return { beat: beat, move: move };
+    });
+    return { name: w.name, archetypeLabel: archetype.label, beats: beats };
+  }
+
+  var lastCard = null;
+
+  function renderCard(){
+    var stip = genState.stipulation === 'zufall'
+      ? STIPULATIONS[Math.floor(Math.random() * STIPULATIONS.length)]
+      : genState.stipulation;
+    var cards = genState.wrestlers.map(buildWrestlerCard);
+    lastCard = { stip: stip, cards: cards };
+    paintCard();
+  }
+
+  function paintCard(){
+    if(!lastCard) return;
+    var out = document.getElementById('card-output');
+    out.innerHTML = '' +
+      '<div class="card-stip">' + escapeHtml(lastCard.stip) + '</div>' +
+      '<div class="card-columns">' +
+        lastCard.cards.map(function(c, ci){
+          var beatsHtml = c.beats.map(function(b){
+            if(!b.move){
+              return '<li><span class="beat-label">' + b.beat.label + '</span><span class="beat-empty">Keine passende Technik bei diesen Filtern</span></li>';
+            }
+            var cat = CATEGORIES[b.move.category];
+            return '' +
+              '<li>' +
+                '<span class="beat-label">' + b.beat.label + '</span>' +
+                '<span class="beat-dot" style="--dot-color:' + cat.color + '"></span>' +
+                '<span class="beat-name">' + escapeHtml(b.move.name) + '</span>' +
+              '</li>';
+          }).join('');
+          return '' +
+            '<div class="wrestler-column">' +
+              '<div class="wrestler-column-head">' +
+                '<h3>' + escapeHtml(c.name) + '</h3>' +
+                '<span class="archetype-pill">' + escapeHtml(c.archetypeLabel) + '</span>' +
+                '<button class="reroll-btn" data-idx="' + ci + '" type="button">Neu würfeln</button>' +
+              '</div>' +
+              '<ol class="beat-list">' + beatsHtml + '</ol>' +
+            '</div>';
+        }).join('') +
+      '</div>';
+    Array.prototype.forEach.call(out.querySelectorAll('.reroll-btn'), function(btn){
+      btn.addEventListener('click', function(){
+        var idx = +btn.dataset.idx;
+        lastCard.cards[idx] = buildWrestlerCard(genState.wrestlers[idx]);
+        paintCard();
+      });
+    });
+  }
+
+  document.getElementById('generate-btn').addEventListener('click', renderCard);
+  document.getElementById('reroll-all-btn').addEventListener('click', function(){ if(lastCard) renderCard(); });
+
+  document.getElementById('copy-btn').addEventListener('click', function(){
+    if(!lastCard){ return; }
+    var text = 'WEIRD WRESTLING ORGANIZER \u2014 MATCH-KARTE\n';
+    text += 'Stipulation: ' + lastCard.stip + '\n\n';
+    lastCard.cards.forEach(function(c){
+      text += c.name + ' (' + c.archetypeLabel + ')\n';
+      c.beats.forEach(function(b){
+        text += '  ' + b.beat.label + ': ' + (b.move ? b.move.name : '\u2014') + '\n';
+      });
+      text += '\n';
+    });
+    var btn = document.getElementById('copy-btn');
+    var original = btn.textContent;
+    function flash(){ btn.textContent = 'Kopiert!'; setTimeout(function(){ btn.textContent = original; }, 1500); }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(flash).catch(function(){ window.prompt('Diesen Text kopieren:', text); });
+    } else {
+      window.prompt('Diesen Text kopieren:', text);
+    }
+  });
+
+  /* ================= TABS ================= */
+  var tabButtons = document.querySelectorAll('.tab-btn');
+  var panels = { archive: document.getElementById('panel-archive'), generator: document.getElementById('panel-generator') };
+  Array.prototype.forEach.call(tabButtons, function(btn){
+    btn.addEventListener('click', function(){
+      Array.prototype.forEach.call(tabButtons, function(b){ b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected','true');
+      Object.keys(panels).forEach(function(key){
+        panels[key].classList.toggle('hidden', key !== btn.dataset.tab);
+      });
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
