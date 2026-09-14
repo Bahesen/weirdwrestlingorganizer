@@ -478,6 +478,11 @@
     });
   }
 
+  function findMoveById(id){
+    for(var i = 0; i < MOVES.length; i++){ if(MOVES[i].id === id) return MOVES[i]; }
+    return null;
+  }
+
   function youtubeSearchUrl(name){
     return 'https://www.youtube.com/results?search_query=' + encodeURIComponent(name + ' wrestling move');
   }
