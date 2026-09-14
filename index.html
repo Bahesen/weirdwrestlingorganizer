@@ -202,6 +202,14 @@
           <button type="button" class="chip active" data-tier="finisher" aria-pressed="true">Finisher</button>
         </div>
       </div>
+      <div class="field-group">
+        <span class="field-title">Risiko</span>
+        <div class="chip-row" id="archive-risk-chips">
+          <button type="button" class="chip active" data-risk="low" aria-pressed="true">Geringes Risiko</button>
+          <button type="button" class="chip active" data-risk="moderate" aria-pressed="true">Mittleres Risiko</button>
+          <button type="button" class="chip active" data-risk="high" aria-pressed="true">Hohes Risiko</button>
+        </div>
+      </div>
     </div>
     <p id="archive-count"></p>
     <div id="archive-grid"></div>
@@ -558,6 +566,7 @@
     search: '',
     categories: new Set(Object.keys(CATEGORIES)),
     tiers: new Set(['basic','signature','finisher']),
+    risks: new Set(['low','moderate','high']),
     favoritesOnly: false
   };
 
@@ -570,6 +579,7 @@
     var results = MOVES.filter(function(m){
       if(!archiveState.categories.has(m.category)) return false;
       if(!archiveState.tiers.has(m.tier)) return false;
+      if(!archiveState.risks.has(m.risk)) return false;
       if(archiveState.favoritesOnly && !favorites.has(m.id)) return false;
       if(q && m.name.toLowerCase().indexOf(q) === -1 && m.desc.toLowerCase().indexOf(q) === -1) return false;
       return true;
@@ -617,6 +627,15 @@
       if(archiveState.tiers.has(tier)){ archiveState.tiers.delete(tier); } else { archiveState.tiers.add(tier); }
       btn.classList.toggle('active');
       btn.setAttribute('aria-pressed', archiveState.tiers.has(tier) ? 'true' : 'false');
+      renderArchive();
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('#archive-risk-chips [data-risk]'), function(btn){
+    btn.addEventListener('click', function(){
+      var risk = btn.dataset.risk;
+      if(archiveState.risks.has(risk)){ archiveState.risks.delete(risk); } else { archiveState.risks.add(risk); }
+      btn.classList.toggle('active');
+      btn.setAttribute('aria-pressed', archiveState.risks.has(risk) ? 'true' : 'false');
       renderArchive();
     });
   });
